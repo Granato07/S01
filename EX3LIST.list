@@ -1,0 +1,30 @@
+(defstruct item nome tipo preco forca-magica)
+
+(defun adiciona-imposto (preco)
+  (* preco 1.15))
+
+(defun bonus-maldicao (forca)
+  (if (> forca 80)
+      (* forca 1.5)
+      forca))
+
+(defun descricao-venda (item)
+  (format nil "~a - Preco: ~a - Forca: ~a"
+    (item-nome item)
+    (adiciona-imposto (item-preco item))
+    (bonus-maldicao (item-forca-magica item))))
+
+(defun processa-venda (itens)
+  (mapcar #'descricao-venda
+          (remove-if-not (lambda (i) (equal (item-tipo i) 'Arma)) itens)))
+
+(defun main ()
+  (let ((catalogo (list
+          (make-item :nome "Espada Longa" :tipo 'Arma :preco 200.0 :forca-magica 90.0)
+          (make-item :nome "Pocao de Cura" :tipo 'Pocao :preco 50.0 :forca-magica 30.0)
+          (make-item :nome "Amuleto" :tipo 'Artefato :preco 150.0 :forca-magica 60.0)
+          (make-item :nome "Adaga" :tipo 'Arma :preco 100.0 :forca-magica 75.0)
+          (make-item :nome "Lanca Sagrada" :tipo 'Arma :preco 300.0 :forca-magica 85.0))))
+    (mapcar (lambda (s) (format t "~a~%" s)) (processa-venda catalogo))))
+
+(main)
